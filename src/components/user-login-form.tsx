@@ -10,6 +10,8 @@ import { FormProvider, useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form"
+import { useAuth } from "@/hooks/useAuth"
+import { useNavigate } from "react-router-dom"
 
 interface UserLoginFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -23,17 +25,20 @@ export function UserLoginForm({ className, ...props }: UserLoginFormProps) {
   const form = useForm<UserLoginFormValues>({
     resolver: zodResolver(schema),
   })
-  const { handleSubmit } = form
+  const navigate = useNavigate()
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
-
+  const { login } = useAuth();
+  
+  const { handleSubmit } = form
   async function onSubmit(data: UserLoginFormValues) {
     setIsLoading(true)
 
-    console.log(data)
+    await login(data)
 
     setTimeout(() => {
       setIsLoading(false)
-    }, 3000)
+      navigate("/home")
+    }, 1000)
   }
 
   return (

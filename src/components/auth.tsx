@@ -4,22 +4,21 @@ import { UserRegisterForm } from "@/components/user-register-form"
 import { Link, useLocation } from "react-router-dom"
 import { UserLoginForm } from "./user-login-form";
 
-
 export default function AuthenticationPage() {
   const location = useLocation();
-  const isLoginPage = location.pathname === "/login";
+  const isRegisterPage = location.pathname === "/register";
 
   return (
     <>
       <div className="container relative hidden h-full flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
         <Link
-          to={isLoginPage ? "/register" : "/login"}
+          to={isRegisterPage ? "/login" : "/register"}
           className={cn(
             buttonVariants({ variant: "ghost" }),
             "absolute right-4 top-4 md:right-8 md:top-8"
           )}
         >
-          {isLoginPage ? "Registrar" : "Login"}
+          {isRegisterPage ? "Login" : "Registrar"}
         </Link>
         <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
           <div className="absolute inset-0 bg-zinc-900" />
@@ -53,17 +52,17 @@ export default function AuthenticationPage() {
           <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
             <div className="flex flex-col space-y-2 text-center">
               <h1 className="text-2xl font-semibold tracking-tight">
-                {isLoginPage ? "Acesse sua conta" : "Crie sua conta"}
+                {isRegisterPage ? "Crie sua conta" : "Acesse sua conta"}
               </h1>
               <p className="text-sm text-muted-foreground">
-                {isLoginPage ? "Insira seu e-mail e senha para acessar sua conta." : "Insira seu nome, e-mail e senha para criar uma conta."}
+                {isRegisterPage ? "Insira seu nome, e-mail e senha para criar uma conta." : "Insira seu e-mail e senha para acessar sua conta."}
               </p>
             </div>
             {
-              isLoginPage ? (
-                <UserLoginForm />
-              ) : (
+              isRegisterPage ? (
                 <UserRegisterForm />
+              ) : (
+                <UserLoginForm />
               )
             }
           </div>

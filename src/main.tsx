@@ -1,23 +1,31 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { UserLoginForm } from './components/user-login-form.tsx'
 import AuthenticationPage from './components/auth.tsx'
+import { ProtectedRoute } from './components/protected-route.tsx'
+import { Dashbord } from './components/dashboard.tsx'
+import { AuthProvider } from './components/auth-provider.tsx'
+
+import './index.css'
 
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <App />,
-  },
-  {
-    path: '/login',
-    element: <AuthenticationPage />,
-  },
-  {
-    path: '/register',
-    element: <AuthenticationPage />,
+    element: <AuthProvider />,
+    children: [
+      ...(['/', '/login', '/register'].map((path) => ({
+        path,
+        element: <AuthenticationPage />,
+      }))),
+      {
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: '/home',
+            element: <Dashbord />,
+          },
+        ]
+      }
+    ],
   }
 ])
 

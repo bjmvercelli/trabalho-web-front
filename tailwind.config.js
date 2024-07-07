@@ -57,7 +57,7 @@ module.exports = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
-      keyframes: {
+      keyframes: (theme) => ({
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -66,10 +66,18 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-      },
+        borderAnimation: {
+          '0%': { borderColor: 'transparent transparent transparent transparent' },
+          '25%': { borderColor: `${theme.colors.indigo[500]} transparent transparent transparent` },
+          '50%': { borderColor: `${theme.colors.indigo[500]} ${theme.colors.indigo[500]} transparent transparent` },
+          '75%': { borderColor: `${theme.colors.indigo[500]} ${theme.colors.indigo[500]} ${theme.colors.indigo[500]} transparent` },
+          '100%': { borderColor: `${theme.colors.indigo[500]} ${theme.colors.indigo[500]} ${theme.colors.indigo[500]} ${theme.colors.indigo[500]}` },
+        },
+      }),
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        'border-animation': 'borderAnimation 0.8s linear forwards',
       },
     },
   },
