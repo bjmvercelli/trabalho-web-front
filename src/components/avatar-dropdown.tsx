@@ -2,14 +2,16 @@ import { useAuth } from "@/hooks/useAuth";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { useNavigate } from "react-router-dom";
 
 
 type AvatarDropdownProps = {
   src?: string;
 };
 
-export function AvatarDropdown({ src = "https://github.com/shadcn.png " }: AvatarDropdownProps) {
+export function AvatarDropdown({ src = "" }: AvatarDropdownProps) {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <DropdownMenu>
@@ -32,7 +34,7 @@ export function AvatarDropdown({ src = "https://github.com/shadcn.png " }: Avata
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>Perfil</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => navigate('/profile')}>Perfil</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={logout} className="text-rose-600">Sair</DropdownMenuItem>

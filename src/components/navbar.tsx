@@ -10,13 +10,13 @@ export function Navbar() {
       </div>
       <ul className="flex flex-row gap-24 text-white font-bold">
         <li>
-          <Link to="/">Home</Link>
+          <Link to="/home">Músicas</Link>
         </li>
         <li>
-          <Link to="/home">Dashboard</Link>
+          <Link to="/favorites">Minhas Favoritas</Link>
         </li>
         <li>
-          <Link to="/login">Login</Link>
+          <Link to="/profile">Meu Perfil</Link>
         </li>
       </ul>
       <div>

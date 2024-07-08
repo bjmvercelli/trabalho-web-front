@@ -7,8 +7,15 @@ import { Dashbord } from './components/dashboard.tsx'
 import { AuthProvider } from './components/auth-provider.tsx'
 
 import './index.css'
+import { Profile } from './components/profile.tsx'
+import { MusicInfo } from './components/music-info.tsx'
+import { NotFound } from './components/not-found.tsx'
 
 const router = createBrowserRouter([
+  {
+    path: '*',
+    element: <NotFound />
+  },
   {
     element: <AuthProvider />,
     children: [
@@ -23,6 +30,14 @@ const router = createBrowserRouter([
             path: '/home',
             element: <Dashbord />,
           },
+          {
+            path: '/profile',
+            element: <Profile />,
+          },
+          {
+            path: '/music/:id',
+            element: <MusicInfo />
+          }
         ]
       }
     ],

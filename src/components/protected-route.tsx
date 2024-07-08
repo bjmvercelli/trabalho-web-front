@@ -12,7 +12,9 @@ export function ProtectedRoute() {
   return (
     <>
       <Navbar />
-      <Outlet />
+      <main className="bg-[#09090B] h-full pt-32 flex justify-center">
+        <Outlet />
+      </main>
     </>
   );
 }
