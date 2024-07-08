@@ -4,7 +4,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import AuthenticationPage from './components/auth.tsx'
 import { ProtectedRoute } from './components/protected-route.tsx'
 import { MusicsList } from './components/musics-list.tsx'
-import { AuthProvider } from './components/auth-provider.tsx'
+import { AuthProvider } from './components/providers/auth-provider.tsx'
 
 import './index.css'
 import { Profile } from './components/profile.tsx'

@@ -4,16 +4,18 @@ import { useMemo } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 type StorageData = {
+  id: string
+  name: string;
   email: string;
-  password: string;
+  token: string;
 }
 
 export const AuthProvider = () => {
   const { value: user, setValue: setUser } = useLocalStorage<StorageData>('user');
   const navigate = useNavigate();
 
-  const login = ({ email, password }: StorageData) => {
-    setUser({ email, password });
+  const login = ({ id, name, email, token }: StorageData) => {
+    setUser({id, name, email, token });
     navigate('/home');
   }
 

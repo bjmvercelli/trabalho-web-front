@@ -1,23 +1,17 @@
 import { ChevronRight, Loader2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { ScrollArea } from "./ui/scroll-area";
 import { useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
-import { searchMusic } from "@/services/api";
+import { searchMusic } from "@/services/music";
 import { useToast } from "./ui/use-toast";
-
-type Music = {
-  artistId: string;
-  artistName: string;
-  lyrics: string;
-  songId: string;
-  songName: string;
-}
+import { useSelectedMusic } from "@/hooks/useSelectedMusic";
+import { Music } from "./shared/types/Music";
 
 export function MusicsList() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { setSelectedMusic } = useSelectedMusic();
   const [music, setMusic] = useState<Music | null>(null);
   const { toast } = useToast()
 
@@ -41,7 +35,7 @@ export function MusicsList() {
     setIsLoading(true);
 
     try {
-      const response = await searchMusic({ artist, music });
+      const response = await searchMusic({ artistName: artist, songName: music});
 
       if (response.status !== 200) {
         toast({
@@ -69,6 +63,11 @@ export function MusicsList() {
 
   }
 
+  const handleSelectMusic = (music: Music) => {
+    setSelectedMusic(music);
+    navigate(`/music/${music.id}`);
+  }
+
   return (
     <section className="w-3/6 flex flex-col items-center">
       <div className="flex gap-8 items-center w-full">
@@ -76,38 +75,39 @@ export function MusicsList() {
           ref={artistRef}
           type="search"
           placeholder="Nome do artista"
-          className="bg-[#27272a80] text-white rounded-full h-12 focus-visible:ring-offset-0 focus-visible:ring-0 focus:animate-border-animation"
+          className="bg-[#27272a80] text-white rounded-lg h-12 focus-visible:ring-offset-0 focus-visible:ring-0 focus:animate-border-animation"
         />
         <Input
           ref={musicRef}
           type="search"
           placeholder="Nome da música"
-          className="bg-[#27272a80] text-white rounded-full h-12 focus-visible:ring-offset-0 focus-visible:ring-0 focus:animate-border-animation"
+          className="bg-[#27272a80] text-white rounded-lg h-12 focus-visible:ring-offset-0 focus-visible:ring-0 focus:animate-border-animation"
         />
-        <Button onClick={handleSearch} className="bg-[#27272a80] text-white rounded-full h-12 px-4" disabled={isLoading}>
+        <Button onClick={handleSearch} className="bg-[#27272a80] text-white rounded-full h-12 px-4 border border-neutral-800" disabled={isLoading}>
           {
             isLoading ? <Loader2 size={24} className="mr-2 h-4 w-4 animate-spin" /> : null
           }
           BUSCAR
         </Button>
       </div>
-      <div className="flex mt-8">
-
-      </div>
       {
-        music && (
-          <div className="bg-[#27272a80] rounded-lg w-full p-4 mt-4 flex justify-between items-center">
+        music ? (
+          <div className="bg-[#27272a80] rounded-lg w-full p-4 mt-16 flex justify-between items-center">
             <div className="flex flex-col justify-start items-start mr-4">
-              <h2 className="text-lg font-semibold text-white">
-                {music.songName} <span className="text-sm text-muted-foreground mt-1 text-left">- {music.artistName}</span>
+              <h2 className="text-lg font-semibold text-white capitalize">
+                {music.title} <span className="text-sm text-muted-foreground mt-1 text-left">- {music.artist}</span>
               </h2>
               <p className="text-sm text-muted-foreground mt-2 text-left">
                 {music.lyrics.slice(0, 100)}...
               </p>
             </div>
-            <Button variant="ghost" className="text-white hover:bg-[#27272a80] hover:text-white" onClick={() => navigate(`/music/1`)}>
+            <Button variant="ghost" className="text-white hover:bg-[#27272a80] hover:text-white" onClick={() => handleSelectMusic(music)}>
               <ChevronRight size={16} />
             </Button>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center h-full mt-4">
+            <p className="text-white text-lg">Pesquise por sua música desejada</p>
           </div>
         )
       }

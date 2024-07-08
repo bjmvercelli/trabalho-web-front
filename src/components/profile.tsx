@@ -6,9 +6,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { useToast } from "./ui/use-toast";
+import { updatePassword } from "@/services/user";
+import { Icons } from "./icons";
+import { useState } from "react";
 
 const schema = z.object({
-  currentPassword: z.string({ required_error: "Insira a senha atual" }).min(6, "A senha deve ter no mínimo 6 caracteres"),
+  // currentPassword: z.string({ required_error: "Insira a senha atual" }).min(6, "A senha deve ter no mínimo 6 caracteres"),
   newPassword: z.string({ required_error: "Insira a nova senha" }).min(6, "A senha deve ter no mínimo 6 caracteres"),
   confirmNewPassword: z.string({ required_error: "Confirme a nova senha" }).min(6, "A senha deve ter no mínimo 6 caracteres"),
 }).refine(data => data.newPassword === data.confirmNewPassword, {
@@ -20,13 +24,42 @@ type ProfileFormValues = z.infer<typeof schema>
 
 export function Profile() {
   const { user } = useAuth();
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(schema),
   })
 
-  const handleSubmit = form.handleSubmit((data) => {
-    console.log(data)
-  })
+  const { handleSubmit } = form;
+
+  const onSubmit = async (data: ProfileFormValues) => {
+    if (!user) return;
+
+    setIsLoading(true);
+    try {
+      const response = await updatePassword({
+        newPassword: data.newPassword,
+        userId: user.id,
+        name: user.name,
+        email: user.email,
+      })
+
+      if (response.status === 200) {
+        toast({
+          title: "Senha atualizada",
+          description: "Sua senha foi atualizada com sucesso",
+        })
+      }
+      setIsLoading(false);
+    } catch (error) {
+      toast({
+        title: "Erro ao atualizar a senha",
+        description: "Ocorreu um erro ao atualizar a senha, tente novamente mais tarde",
+        variant: 'destructive'
+      });
+      setIsLoading(false);
+    }
+  };
 
   return (
     <section>
@@ -35,13 +68,13 @@ export function Profile() {
           <AvatarImage src="" alt="Avatar" />
           <AvatarFallback>BR</AvatarFallback>
         </Avatar>
-        <p className="text-white text-lg font-semibold mt-4">{user?.email}</p>
+        <p className="text-white text-lg font-semibold mt-4 capitalize">{user?.name}</p>
       </div>
 
       <FormProvider {...form}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid gap-6 mt-6">
-            <FormField
+            {/* <FormField
               control={form.control}
               name="currentPassword"
               render={({ field }) => (
@@ -60,7 +93,7 @@ export function Profile() {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
 
             <FormField
               control={form.control}
@@ -104,7 +137,13 @@ export function Profile() {
               )}
             />
 
-            <Button type="submit">Salvar</Button>
+            <Button type="submit">
+              {
+                isLoading
+                  ? <Icons.spinner className="animate-spin" />
+                  : "Atualizar senha"
+              }
+            </Button>
           </div>
         </form>
       </FormProvider>

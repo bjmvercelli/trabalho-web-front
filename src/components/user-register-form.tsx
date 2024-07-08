@@ -10,13 +10,13 @@ import { z } from "zod"
 import { FormProvider, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form"
-import { registerRequest } from "@/services/api"
+import { registerRequest } from "@/services/auth"
 import { useToast } from "./ui/use-toast"
 
 interface UserRegisterFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 const schema = z.object({
-  username: z.string({ required_error: "Insira seu nome de usuário"}),
+  name: z.string({ required_error: "Insira seu nome"}),
   email: z.string({ required_error: "Insira um email válido" }).email("Insira um email válido"),
   password: z.string({ required_error: "Insira uma senha" }).min(6, "A senha deve ter no mínimo 6 caracteres"),
   confirmPassword: z.string({ required_error: "Confirme sua senha"})
@@ -42,7 +42,7 @@ export function UserRegisterForm({ className, ...props }: UserRegisterFormProps)
     try {
       const response = await registerRequest(data)
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         toast({
           title: "Conta criada com sucesso",
           description: "Faça login para acessar sua conta",
@@ -77,13 +77,13 @@ export function UserRegisterForm({ className, ...props }: UserRegisterFormProps)
           <div className="grid gap-2">
             <FormField
               control={form.control}
-              name="username"
+              name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="sr-only">Username</FormLabel>
+                  <FormLabel className="sr-only">Nome</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Username"
+                      placeholder="Nome"
                       disabled={isLoading}
                       {...field}
                     />

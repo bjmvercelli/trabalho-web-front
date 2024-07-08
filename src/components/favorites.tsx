@@ -1,22 +1,39 @@
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Loader2, Search } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getFavoritesRequest } from "@/services/api";
+import { getFavoritesRequest } from "@/services/music";
 import { useToast } from "./ui/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import { Music } from "./shared/types/Music";
+import { useSelectedMusic } from "@/hooks/useSelectedMusic";
+import { Icons } from "./icons";
+
+const debounceSearch = (fn: Function, delay: number) => {
+  let timer: NodeJS.Timeout;
+  return (...args: any) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      fn(...args);
+    }, delay);
+  }
+}
 
 export function Favorites() {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { setSelectedMusic } = useSelectedMusic();
+  const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false)
-  const [favorites, setFavorites] = useState([])
+  const [isLoadingSearch, setIsLoadingSearch] = useState(false)
+  const [favorites, setFavorites] = useState<Music[]>([])
 
   useEffect(() => {
     setIsLoading(true)
-    getFavoritesRequest('3')
-      .then(favorites  => {
+    getFavoritesRequest(user?.id!)
+      .then(favorites => {
         setFavorites(favorites.data)
         setIsLoading(false)
       }).catch(error => {
@@ -31,28 +48,50 @@ export function Favorites() {
       })
   }, [])
 
+  const handleSelectMusic = (music: Music) => {
+    setSelectedMusic(music);
+    navigate(`/music/${music.id}`);
+  }
+
+  const handleSearch = debounceSearch((event: React.ChangeEvent<HTMLInputElement>) => {
+    const filteredFavorites = favorites.filter(favorite => favorite.title.toLowerCase().includes(event.target.value.toLowerCase()))
+    setFavorites(filteredFavorites)
+    setIsLoadingSearch(false)
+  }, 1000)
+
   return (
     <section className="w-3/6 flex flex-col">
-      <Input
-        type="search"
-        placeholder="Buscar"
-        className="bg-[#27272a80] text-white rounded-full h-12 focus-visible:ring-offset-0 focus-visible:ring-0 focus:animate-border-animation"
-      />
+      <div className="flex items-center justify-center py-4 w-full">
+        {
+          isLoadingSearch
+            ? <Icons.spinner className="relative left-8 w-4 h-4 -ml-4 animate-spin text-white"/> 
+            : <Search className="relative w-4 h-4 -ml-4 left-8 top-2 transform -translate-y-1/2" color="#fff" />
+        }
+        <Input
+          type="search"
+          placeholder="Busque pelo nome da música"
+          className="bg-[#27272a80] pl-10 text-white rounded-full h-12 focus-visible:ring-offset-0 focus-visible:ring-0 focus:animate-border-animation justify-self-center w-3/6"
+          onChange={(value) => {
+            setIsLoadingSearch(true)
+            handleSearch(value)
+          }}
+        />
+      </div>
       <ScrollArea className="h-full bg-red mt-4 mb-16">
         <div>
           {
             favorites.length ? (
-              favorites.map((_, index) => (
-                <div key={index} className="bg-[#27272a80] rounded-lg p-4 mt-4 flex">
+              favorites.map((music, index) => (
+                <div className="bg-[#27272a80] rounded-lg w-full p-4 mt-4 flex justify-between items-center">
                   <div className="flex flex-col justify-start items-start mr-4">
-                    <h2 className="text-lg font-semibold text-white">Música {index + 1}</h2>
+                    <h2 className="text-lg font-semibold text-white capitalize">
+                      {music.title} <span className="text-sm text-muted-foreground mt-1 text-left">- {music.artist}</span>
+                    </h2>
                     <p className="text-sm text-muted-foreground mt-2 text-left">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-                      nec dui sed elit bibendum cursus. Nam nec odio nec elit
-                      condimentum tincidunt.
+                      {music.lyrics.slice(0, 100)}...
                     </p>
                   </div>
-                  <Button variant="ghost" className="mt-4 text-white hover:bg-[#27272a80] hover:text-white" onClick={() => navigate(`/music/${index}`)}>
+                  <Button variant="ghost" className="text-white hover:bg-[#27272a80] hover:text-white" onClick={() => handleSelectMusic(music)}>
                     <ChevronRight size={16} />
                   </Button>
                 </div>

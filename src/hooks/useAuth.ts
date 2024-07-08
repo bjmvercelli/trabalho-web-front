@@ -1,8 +1,10 @@
 import { createContext, useContext } from "react";
 
 type StorageData = {
+  id: string
+  name: string;
   email: string;
-  password: string;
+  token: string;
 }
 
 export const AuthContext = createContext({

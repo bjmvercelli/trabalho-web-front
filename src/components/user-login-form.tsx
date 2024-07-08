@@ -12,7 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form"
 import { useAuth } from "@/hooks/useAuth"
 import { useNavigate } from "react-router-dom"
-import { loginRequest } from "@/services/api"
+import { loginRequest, setToken } from "@/services/auth"
 import { useToast } from "./ui/use-toast"
 
 interface UserLoginFormProps extends React.HTMLAttributes<HTMLDivElement> { }
@@ -41,8 +41,14 @@ export function UserLoginForm({ className, ...props }: UserLoginFormProps) {
       const { data: responseData, status } = await loginRequest(data);
       setIsLoading(false)
 
-      if (status === 201) {
-        login(data)
+      if (status === 200) {
+        login({ 
+          name: responseData.user.name,
+          id: responseData.user.id,
+          email: responseData.user.email,
+          token: responseData.tokens.accessToken
+        })
+        setToken(responseData.tokens.accessToken);
         navigate("/home")
         return
       }
