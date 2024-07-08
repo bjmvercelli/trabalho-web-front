@@ -1,7 +1,7 @@
 import { ChevronLeft, Star } from "lucide-react";
 import { Button } from "./ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import DOMPurify from "dompurify";
 import { useNavigate } from "react-router-dom";
@@ -130,6 +130,7 @@ const lyrics = `
 export function MusicInfo() {
   const navigate = useNavigate();
   const [isFavorite, setIsFavorite] = useState<boolean>(false)
+  const [isLoadingMusic, setIsLoadingMusic] = useState<boolean>(false)
 
   const parsedLyrics = lyrics.replace(/\n/g, "<br />");
   const purifiedHTML = DOMPurify.sanitize(parsedLyrics)

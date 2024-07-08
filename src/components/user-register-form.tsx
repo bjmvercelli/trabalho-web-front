@@ -10,7 +10,7 @@ import { z } from "zod"
 import { FormProvider, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form"
-import { RegisterRequest } from "@/services/api"
+import { registerRequest } from "@/services/api"
 import { useToast } from "./ui/use-toast"
 
 interface UserRegisterFormProps extends React.HTMLAttributes<HTMLDivElement> { }
@@ -40,7 +40,7 @@ export function UserRegisterForm({ className, ...props }: UserRegisterFormProps)
     setIsLoading(true)
 
     try {
-      const response = await RegisterRequest(data)
+      const response = await registerRequest(data)
 
       if (response.status === 201) {
         toast({
@@ -48,6 +48,7 @@ export function UserRegisterForm({ className, ...props }: UserRegisterFormProps)
           description: "Faça login para acessar sua conta",
           className: "top-0 left-1/2 transform -translate-x-1/2 flex fixed md:max-w-[420px] md:top-4 md:right-4 text-left"
         })
+        setIsLoading(false)
         return
       }
 

@@ -12,7 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form"
 import { useAuth } from "@/hooks/useAuth"
 import { useNavigate } from "react-router-dom"
-import { LoginRequest } from "@/services/api"
+import { loginRequest } from "@/services/api"
 import { useToast } from "./ui/use-toast"
 
 interface UserLoginFormProps extends React.HTMLAttributes<HTMLDivElement> { }
@@ -37,28 +37,33 @@ export function UserLoginForm({ className, ...props }: UserLoginFormProps) {
   async function onSubmit(data: UserLoginFormValues) {
     setIsLoading(true)
 
-    login(data)
+    try {
+      const { data: responseData, status } = await loginRequest(data);
+      setIsLoading(false)
 
-    // try {
-    //   const { data: responseData, status } = await LoginRequest(data);
-    //   setIsLoading(false)
+      if (status === 201) {
+        login(data)
+        navigate("/home")
+        return
+      }
 
-    //   if (status === 201) {
-    //     login(data)
-    //     navigate("/home")
-    //     return
-    //   }
-
-    // } catch (error) {
-    //   console.error(error)
-    //   toast({
-    //     title: "Erro ao fazer login",
-    //     description: "Verifique se o email e senha estão corretos",
-    //     variant: "destructive",
-    //     className: "top-0 left-1/2 transform -translate-x-1/2 flex fixed md:max-w-[420px] md:top-4 md:right-4 text-left"
-    //   });
-    //   setIsLoading(false)
-    // }
+      toast({
+        title: "Erro ao fazer login",
+        description: "Verifique se o email e senha estão corretos",
+        variant: "destructive",
+        className: "top-0 left-1/2 transform -translate-x-1/2 flex fixed md:max-w-[420px] md:top-4 md:right-4 text-left"
+      });
+      setIsLoading(false)
+    } catch (error) {
+      console.error(error)
+      toast({
+        title: "Erro ao fazer login",
+        description: "Verifique se o email e senha estão corretos",
+        variant: "destructive",
+        className: "top-0 left-1/2 transform -translate-x-1/2 flex fixed md:max-w-[420px] md:top-4 md:right-4 text-left"
+      });
+      setIsLoading(false)
+    }
   }
 
   return (

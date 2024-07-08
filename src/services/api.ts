@@ -25,7 +25,12 @@ type FavoriteMusicRequestParams = {
   music: string;
 };
 
-export async function LoginRequest(params: LoginRequestParams) {
+type SearchMusicParams = {
+  artist: string;
+  music: string;
+};
+
+export async function loginRequest(params: LoginRequestParams) {
   const { email, password } = params;
 
   const response = await axios.post("/login", {
@@ -39,7 +44,7 @@ export async function LoginRequest(params: LoginRequestParams) {
   };
 }
 
-export async function RegisterRequest(params: RegisterRequestParams) {
+export async function registerRequest(params: RegisterRequestParams) {
   const { username, email, password, confirmPassword } = params;
 
   const response = await axios.post("/createUser", {
@@ -55,7 +60,7 @@ export async function RegisterRequest(params: RegisterRequestParams) {
   };
 }
 
-export async function FavoriteMusicRequest(params: FavoriteMusicRequestParams) {
+export async function favoriteMusicRequest(params: FavoriteMusicRequestParams) {
   const response = await axios.post("/favoritarMusica", {
     ...params,
   });
@@ -66,7 +71,7 @@ export async function FavoriteMusicRequest(params: FavoriteMusicRequestParams) {
   };
 }
 
-export async function UnfavoriteMusicRequest(params: FavoriteMusicRequestParams) {
+export async function unfavoriteMusicRequest(params: FavoriteMusicRequestParams) {
   const response = await axios.post("/desfavoritarMusica", {
     ...params,
   });
@@ -77,8 +82,28 @@ export async function UnfavoriteMusicRequest(params: FavoriteMusicRequestParams)
   };
 }
 
-export async function GetFavoritesRequest(userId: string) {
-  const response = await axios.get(`/minhasFavoritas/${userId}`);
+export async function getFavoritesRequest(userId: string) {
+  const response = await axios.get(`/minhasFavoritas?usuario=${userId}`);
+
+  return {
+    data: response.data,
+    status: response.status,
+  };
+}
+
+export async function searchMusic(params: SearchMusicParams) {
+  const response = await axios.post("/pesquisarMusica", {
+    ...params,
+  });
+
+  return {
+    data: response.data.result,
+    status: response.status,
+  };
+}
+
+export async function searchMusicById(id: string) {
+  const response = await axios.get(`/musica/${id}`);
 
   return {
     data: response.data,
