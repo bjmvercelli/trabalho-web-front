@@ -10,6 +10,8 @@ import { z } from "zod"
 import { FormProvider, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form"
+import { RegisterRequest } from "@/services/api"
+import { useToast } from "./ui/use-toast"
 
 interface UserRegisterFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
@@ -29,19 +31,43 @@ export function UserRegisterForm({ className, ...props }: UserRegisterFormProps)
   const form = useForm<UserRegisterFormValues>({
     resolver: zodResolver(schema),
   })
-  const { handleSubmit, formState } = form
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  const { toast } = useToast()
+
+  const { handleSubmit, formState } = form
 
   async function onSubmit(data: UserRegisterFormValues) {
-    console.log(data)
     setIsLoading(true)
 
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 3000)
-  }
+    try {
+      const response = await RegisterRequest(data)
 
-  console.log(formState.errors)
+      if (response.status === 201) {
+        toast({
+          title: "Conta criada com sucesso",
+          description: "Faça login para acessar sua conta",
+          className: "top-0 left-1/2 transform -translate-x-1/2 flex fixed md:max-w-[420px] md:top-4 md:right-4 text-left"
+        })
+        return
+      }
+
+      toast({
+        title: "Erro ao criar conta",
+        description: "Verifique se os dados estão corretos",
+        variant: "destructive",
+        className: "top-0 left-1/2 transform -translate-x-1/2 flex fixed md:max-w-[420px] md:top-4 md:right-4 text-left"
+      })
+      setIsLoading(false)
+    } catch (error) {
+      toast({
+        title: "Erro ao criar conta",
+        description: "Verifique se os dados estão corretos",
+        variant: "destructive",
+        className: "top-0 left-1/2 transform -translate-x-1/2 flex fixed md:max-w-[420px] md:top-4 md:right-4 text-left"
+      })
+      setIsLoading(false)
+    }
+  }
 
   return (
     <div className={cn("grid gap-6", className)} {...props}>

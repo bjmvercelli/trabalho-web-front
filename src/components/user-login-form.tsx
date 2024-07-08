@@ -13,6 +13,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/f
 import { useAuth } from "@/hooks/useAuth"
 import { useNavigate } from "react-router-dom"
 import { LoginRequest } from "@/services/api"
+import { useToast } from "./ui/use-toast"
 
 interface UserLoginFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
@@ -29,6 +30,7 @@ export function UserLoginForm({ className, ...props }: UserLoginFormProps) {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const { login } = useAuth();
+  const { toast } = useToast()
 
   const { handleSubmit } = form
 
@@ -38,7 +40,7 @@ export function UserLoginForm({ className, ...props }: UserLoginFormProps) {
     try {
       const { data: responseData, status } = await LoginRequest(data);
       setIsLoading(false)
-      
+
       if (status === 201) {
         login(data)
         navigate("/home")
@@ -47,7 +49,12 @@ export function UserLoginForm({ className, ...props }: UserLoginFormProps) {
 
     } catch (error) {
       console.error(error)
-      alert("Erro ao fazer login")
+      toast({
+        title: "Erro ao fazer login",
+        description: "Verifique se o email e senha estão corretos",
+        variant: "destructive",
+        className: "top-0 left-1/2 transform -translate-x-1/2 flex fixed md:max-w-[420px] md:top-4 md:right-4 text-left"
+      });
       setIsLoading(false)
     }
   }
