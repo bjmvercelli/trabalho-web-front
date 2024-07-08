@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Buffer } from "buffer";
 
 export const useLocalStorage = <T extends unknown>(key: string) => {
-  const [storedValue, setStoredValue] = useState<any>(() => {
+  const [storedValue, setStoredValue] = useState<T>(() => {
     try {
       const item = window.localStorage.getItem(key)
       if (item) {

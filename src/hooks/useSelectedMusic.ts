@@ -3,7 +3,7 @@ import { createContext, useContext } from "react";
 
 export const SelectedMusicContext = createContext({
   selectedMusic: null as Music | null,
-  setSelectedMusic: (music: Music | null) => {},
+  setSelectedMusic: (_music: Music | null) => {},
 });
 
 export const useSelectedMusic = () => {

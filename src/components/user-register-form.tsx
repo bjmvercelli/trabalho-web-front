@@ -34,7 +34,7 @@ export function UserRegisterForm({ className, ...props }: UserRegisterFormProps)
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const { toast } = useToast()
 
-  const { handleSubmit, formState } = form
+  const { handleSubmit } = form
 
   async function onSubmit(data: UserRegisterFormValues) {
     setIsLoading(true)

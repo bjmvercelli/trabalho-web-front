@@ -1,4 +1,4 @@
-import { ChevronRight, Loader2, Search } from "lucide-react";
+import { ChevronRight, Search } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
@@ -30,21 +30,18 @@ const debounceSearch = (fn: Function, delay: number) => {
 export function Favorites() {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { setSelectedMusic } = useSelectedMusic();
   const { user } = useAuth();
-  const [isLoading, setIsLoading] = useState(false)
+  const { setSelectedMusic } = useSelectedMusic();
   const [isLoadingSearch, setIsLoadingSearch] = useState(false)
   const [favorites, setFavorites] = useState<Favorites | null>(null)
 
   useEffect(() => {
-    setIsLoading(true)
     getFavoritesRequest(user?.id!)
       .then(favorites => {
         setFavorites({
           allFavorites: favorites.data,
           filteredFavorites: favorites.data
         });
-        setIsLoading(false)
       }).catch(error => {
         console.error(error)
         toast({
@@ -53,7 +50,6 @@ export function Favorites() {
           variant: "destructive",
           className: "top-0 left-1/2 transform -translate-x-1/2 flex fixed md:max-w-[420px] md:top-4 md:right-4 text-left"
         });
-        setIsLoading(false)
       })
   }, [])
 
@@ -102,7 +98,7 @@ export function Favorites() {
         <div>
           {
             favorites?.filteredFavorites ? (
-              favorites.filteredFavorites.map((music, index) => (
+              favorites.filteredFavorites.map((music, _) => (
                 <div key={music.id} className="bg-[#27272a80] rounded-lg w-full p-4 mt-4 flex justify-between items-center">
                   <div className="flex flex-col justify-start items-start mr-4">
                     <h2 className="text-lg font-semibold text-white capitalize">

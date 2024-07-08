@@ -2,7 +2,7 @@ import { ChevronLeft, Loader2, Star } from "lucide-react";
 import { Button } from "./ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import { useEffect, useState } from "react";
-import { ScrollArea, ScrollBar } from "./ui/scroll-area";
+import { ScrollArea } from "./ui/scroll-area";
 import DOMPurify from "dompurify";
 import { useNavigate } from "react-router-dom";
 import { useSelectedMusic } from "@/hooks/useSelectedMusic";
@@ -14,7 +14,7 @@ export function MusicInfo() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
-  const { selectedMusic, setSelectedMusic } = useSelectedMusic();
+  const { selectedMusic } = useSelectedMusic();
   const [isFavorite, setIsFavorite] = useState<boolean>(false)
   const [isLoadingFavorite, setIsLoadingFavorite] = useState<boolean>(false)
 

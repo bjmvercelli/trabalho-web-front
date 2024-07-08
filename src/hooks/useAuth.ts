@@ -9,7 +9,7 @@ type StorageData = {
 
 export const AuthContext = createContext({
   user: null as StorageData | null,
-  login: (params: StorageData) => {},
+  login: (_params: StorageData) => {},
   logout: () => {}
 })
 
