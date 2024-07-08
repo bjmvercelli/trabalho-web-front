@@ -1,5 +1,12 @@
 import Axios from 'axios';
 
+const axios = Axios.create({
+  baseURL: 'http://localhost:3000',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 type LoginRequestParams = {
   email: string;
   password: string;
@@ -8,7 +15,7 @@ type LoginRequestParams = {
 export async function LoginRequest(params: LoginRequestParams) {
   const { email, password } = params;
 
-  const response = await Axios.post('/api/login', {
+  const response = await axios.post('/api/login', {
     email,
     password,
   });
