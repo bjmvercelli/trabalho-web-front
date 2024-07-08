@@ -16,7 +16,7 @@ import { useToast } from "./ui/use-toast"
 interface UserRegisterFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 const schema = z.object({
-  name: z.string({ required_error: "Insira seu nome"}),
+  username: z.string({ required_error: "Insira seu nome de usuário"}),
   email: z.string({ required_error: "Insira um email válido" }).email("Insira um email válido"),
   password: z.string({ required_error: "Insira uma senha" }).min(6, "A senha deve ter no mínimo 6 caracteres"),
   confirmPassword: z.string({ required_error: "Confirme sua senha"})
@@ -76,13 +76,13 @@ export function UserRegisterForm({ className, ...props }: UserRegisterFormProps)
           <div className="grid gap-2">
             <FormField
               control={form.control}
-              name="name"
+              name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="sr-only">Nome</FormLabel>
+                  <FormLabel className="sr-only">Username</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Nome"
+                      placeholder="Username"
                       disabled={isLoading}
                       {...field}
                     />

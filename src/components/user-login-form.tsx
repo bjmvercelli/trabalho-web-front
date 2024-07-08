@@ -37,26 +37,28 @@ export function UserLoginForm({ className, ...props }: UserLoginFormProps) {
   async function onSubmit(data: UserLoginFormValues) {
     setIsLoading(true)
 
-    try {
-      const { data: responseData, status } = await LoginRequest(data);
-      setIsLoading(false)
+    login(data)
 
-      if (status === 201) {
-        login(data)
-        navigate("/home")
-        return
-      }
+    // try {
+    //   const { data: responseData, status } = await LoginRequest(data);
+    //   setIsLoading(false)
 
-    } catch (error) {
-      console.error(error)
-      toast({
-        title: "Erro ao fazer login",
-        description: "Verifique se o email e senha estão corretos",
-        variant: "destructive",
-        className: "top-0 left-1/2 transform -translate-x-1/2 flex fixed md:max-w-[420px] md:top-4 md:right-4 text-left"
-      });
-      setIsLoading(false)
-    }
+    //   if (status === 201) {
+    //     login(data)
+    //     navigate("/home")
+    //     return
+    //   }
+
+    // } catch (error) {
+    //   console.error(error)
+    //   toast({
+    //     title: "Erro ao fazer login",
+    //     description: "Verifique se o email e senha estão corretos",
+    //     variant: "destructive",
+    //     className: "top-0 left-1/2 transform -translate-x-1/2 flex fixed md:max-w-[420px] md:top-4 md:right-4 text-left"
+    //   });
+    //   setIsLoading(false)
+    // }
   }
 
   return (

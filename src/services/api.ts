@@ -13,7 +13,7 @@ type LoginRequestParams = {
 };
 
 type RegisterRequestParams = {
-  name: string;
+  username: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -22,7 +22,7 @@ type RegisterRequestParams = {
 export async function LoginRequest(params: LoginRequestParams) {
   const { email, password } = params;
 
-  const response = await axios.post("/api/login", {
+  const response = await axios.post("/login", {
     email,
     password,
   });
@@ -34,10 +34,10 @@ export async function LoginRequest(params: LoginRequestParams) {
 }
 
 export async function RegisterRequest(params: RegisterRequestParams) {
-  const { name, email, password, confirmPassword } = params;
+  const { username, email, password, confirmPassword } = params;
 
-  const response = await axios.post("/api/register", {
-    name,
+  const response = await axios.post("/createUser", {
+    username,
     email,
     password,
     confirmPassword,
