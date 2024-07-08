@@ -14,7 +14,7 @@ import { useAuth } from "@/hooks/useAuth"
 import { useNavigate } from "react-router-dom"
 import { LoginRequest } from "@/services/api"
 
-interface UserLoginFormProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface UserLoginFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 const schema = z.object({
   email: z.string({ required_error: "Insira um email válido" }).email("Insira um email válido"),
@@ -29,22 +29,27 @@ export function UserLoginForm({ className, ...props }: UserLoginFormProps) {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const { login } = useAuth();
-  
+
   const { handleSubmit } = form
 
   async function onSubmit(data: UserLoginFormValues) {
     setIsLoading(true)
 
-    const { data: responseData, status } = await LoginRequest(data);
-    setIsLoading(false)
+    try {
+      const { data: responseData, status } = await LoginRequest(data);
+      setIsLoading(false)
+      
+      if (status === 201) {
+        login(data)
+        navigate("/home")
+        return
+      }
 
-    if (status === 201) {
-      login(data)
-      navigate("/home")
-      return
+    } catch (error) {
+      console.error(error)
+      alert("Erro ao fazer login")
+      setIsLoading(false)
     }
-
-    alert("Erro ao fazer login")
   }
 
   return (
