@@ -19,6 +19,12 @@ type RegisterRequestParams = {
   confirmPassword: string;
 };
 
+type FavoriteMusicRequestParams = {
+  userId: string;
+  artist: string;
+  music: string;
+};
+
 export async function LoginRequest(params: LoginRequestParams) {
   const { email, password } = params;
 
@@ -42,6 +48,37 @@ export async function RegisterRequest(params: RegisterRequestParams) {
     password,
     confirmPassword,
   });
+
+  return {
+    data: response.data,
+    status: response.status,
+  };
+}
+
+export async function FavoriteMusicRequest(params: FavoriteMusicRequestParams) {
+  const response = await axios.post("/favoritarMusica", {
+    ...params,
+  });
+
+  return {
+    data: response.data,
+    status: response.status,
+  };
+}
+
+export async function UnfavoriteMusicRequest(params: FavoriteMusicRequestParams) {
+  const response = await axios.post("/desfavoritarMusica", {
+    ...params,
+  });
+
+  return {
+    data: response.data,
+    status: response.status,
+  };
+}
+
+export async function GetFavoritesRequest(userId: string) {
+  const response = await axios.get(`/minhasFavoritas/${userId}`);
 
   return {
     data: response.data,

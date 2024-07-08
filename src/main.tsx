@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import AuthenticationPage from './components/auth.tsx'
 import { ProtectedRoute } from './components/protected-route.tsx'
-import { Dashbord } from './components/dashboard.tsx'
+import { MusicsList } from './components/musics-list.tsx'
 import { AuthProvider } from './components/auth-provider.tsx'
 
 import './index.css'
@@ -30,7 +30,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: '/home',
-            element: <Dashbord />,
+            element: <MusicsList />,
           },
           {
             path: '/profile',

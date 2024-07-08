@@ -4,7 +4,7 @@ import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
 import { useNavigate } from "react-router-dom";
 
-export function Dashbord() {
+export function MusicsList() {
   const navigate = useNavigate();
 
   return (
