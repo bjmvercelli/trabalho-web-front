@@ -11,6 +11,11 @@ import { Music } from "./shared/types/Music";
 import { useSelectedMusic } from "@/hooks/useSelectedMusic";
 import { Icons } from "./icons";
 
+type Favorites = {
+  allFavorites: Music[];
+  filteredFavorites: Music[];
+}
+
 const debounceSearch = (fn: Function, delay: number) => {
   let timer: NodeJS.Timeout;
   return (...args: any) => {
@@ -21,6 +26,7 @@ const debounceSearch = (fn: Function, delay: number) => {
   }
 }
 
+
 export function Favorites() {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -28,13 +34,16 @@ export function Favorites() {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false)
   const [isLoadingSearch, setIsLoadingSearch] = useState(false)
-  const [favorites, setFavorites] = useState<Music[]>([])
+  const [favorites, setFavorites] = useState<Favorites | null>(null)
 
   useEffect(() => {
     setIsLoading(true)
     getFavoritesRequest(user?.id!)
       .then(favorites => {
-        setFavorites(favorites.data)
+        setFavorites({
+          allFavorites: favorites.data,
+          filteredFavorites: favorites.data
+        });
         setIsLoading(false)
       }).catch(error => {
         console.error(error)
@@ -54,8 +63,20 @@ export function Favorites() {
   }
 
   const handleSearch = debounceSearch((event: React.ChangeEvent<HTMLInputElement>) => {
-    const filteredFavorites = favorites.filter(favorite => favorite.title.toLowerCase().includes(event.target.value.toLowerCase()))
-    setFavorites(filteredFavorites)
+    if (!event.target.value) {
+      setFavorites((prev) => ({
+        ...prev!,
+        filteredFavorites: prev!.allFavorites
+      }))
+      setIsLoadingSearch(false)
+      return
+    }
+
+    const filteredFavorites = favorites?.allFavorites.filter(favorite => favorite.title.toLowerCase().includes(event.target.value.toLowerCase()))
+    setFavorites((prev) => ({
+      ...prev!,
+      filteredFavorites: filteredFavorites!
+    }))
     setIsLoadingSearch(false)
   }, 1000)
 
@@ -64,7 +85,7 @@ export function Favorites() {
       <div className="flex items-center justify-center py-4 w-full">
         {
           isLoadingSearch
-            ? <Icons.spinner className="relative left-8 w-4 h-4 -ml-4 animate-spin text-white"/> 
+            ? <Icons.spinner className="relative left-8 w-4 h-4 -ml-4 animate-spin text-white" />
             : <Search className="relative w-4 h-4 -ml-4 left-8 top-2 transform -translate-y-1/2" color="#fff" />
         }
         <Input
@@ -80,9 +101,9 @@ export function Favorites() {
       <ScrollArea className="h-full bg-red mt-4 mb-16">
         <div>
           {
-            favorites.length ? (
-              favorites.map((music, index) => (
-                <div className="bg-[#27272a80] rounded-lg w-full p-4 mt-4 flex justify-between items-center">
+            favorites?.filteredFavorites ? (
+              favorites.filteredFavorites.map((music, index) => (
+                <div key={music.id} className="bg-[#27272a80] rounded-lg w-full p-4 mt-4 flex justify-between items-center">
                   <div className="flex flex-col justify-start items-start mr-4">
                     <h2 className="text-lg font-semibold text-white capitalize">
                       {music.title} <span className="text-sm text-muted-foreground mt-1 text-left">- {music.artist}</span>
