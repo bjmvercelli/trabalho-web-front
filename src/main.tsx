@@ -11,6 +11,7 @@ import { Profile } from './components/profile.tsx'
 import { MusicInfo } from './components/music-info.tsx'
 import { NotFound } from './components/not-found.tsx'
 import { Toaster } from './components/ui/toaster.tsx'
+import { Favorites } from './components/favorites.tsx'
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
           {
             path: '/music/:id',
             element: <MusicInfo />
+          },
+          {
+            path: '/favorites',
+            element: <Favorites />
           }
         ]
       }
