@@ -14,7 +14,7 @@ export default function AuthenticationPage() {
   const isRegisterPage = location.pathname === "/register";
 
   useEffect(() => {
-    if (user) {
+    if (user?.id) {
       navigate("/home");
     }
   }, [user])

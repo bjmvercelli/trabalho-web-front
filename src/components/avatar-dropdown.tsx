@@ -19,7 +19,7 @@ export function AvatarDropdown({ src = "" }: AvatarDropdownProps) {
         <Button variant="ghost" className="relative h-10 w-10 rounded-full">
           <Avatar className="h-10 w-10">
             <AvatarImage src={src} alt="Avatar" />
-            <AvatarFallback className="capitalize">{user?.name.charAt(0)}{user?.name.charAt(1)}</AvatarFallback>
+            <AvatarFallback className="capitalize">{user?.name?.charAt(0)}{user?.name?.charAt(1)}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>

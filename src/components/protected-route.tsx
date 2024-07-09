@@ -6,7 +6,7 @@ import { SelectedMusicProvider } from "./providers/selected-music-provider";
 export function ProtectedRoute() {
   const { user } = useAuth();
 
-  if (!user) {
+  if (!user?.id) {
     return <Navigate to="/login" />;
   }
 

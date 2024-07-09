@@ -11,7 +11,7 @@ type StorageData = {
 }
 
 export const AuthProvider = () => {
-  const { value: user, setValue: setUser } = useLocalStorage<StorageData>('user');
+  const { value: user, setValue: setUser } = useLocalStorage<StorageData | null>('user');
   const navigate = useNavigate();
 
   const login = ({ id, name, email, token }: StorageData) => {
