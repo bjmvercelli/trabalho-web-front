@@ -10,10 +10,10 @@ export const useLocalStorage = <T extends unknown>(key: string) => {
 
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
-      const item = window.localStorage.getItem(key)
-      if (item) {
-        const parsedItem = Buffer.from(item, 'base64').toString('utf-8')
-        return JSON.parse(parsedItem)
+      const storedItem = window.localStorage.getItem(key)
+      if (storedItem) {
+        const decodedItem = Buffer.from(storedItem, 'base64').toString('utf-8')
+        return JSON.parse(decodedItem)
       }
       const defaultValue = getDefaultValue()
       window.localStorage.setItem(key, defaultValue)
