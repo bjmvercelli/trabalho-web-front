@@ -1,7 +1,13 @@
 import { useState } from "react"
 import { Buffer } from "buffer";
 
+const getDefaultValue = () => {
+  const formattedItem = Buffer.from(JSON.stringify({ data: false })).toString('base64')
+  return formattedItem
+}
+
 export const useLocalStorage = <T extends unknown>(key: string) => {
+
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
       const item = window.localStorage.getItem(key)
@@ -16,11 +22,6 @@ export const useLocalStorage = <T extends unknown>(key: string) => {
       return getDefaultValue()
     }
   });
-
-  const getDefaultValue = () => {
-    const formattedItem = Buffer.from(JSON.stringify({ data: false })).toString('base64')
-    return formattedItem
-  }
 
   const setValue = (value: any) => {
     try {
