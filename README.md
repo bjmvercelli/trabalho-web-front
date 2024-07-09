@@ -7,6 +7,7 @@ Repositório destinado ao desenvolvimento do frontend do projeto MyMix. O projet
 ## Tecnologias Utilizadas
 
 - [React](https://reactjs.org/)
+- [Vite](https://vitejs.dev/)
 - [Typescript](https://www.typescriptlang.org/)
 - [TailwindCSS](https://tailwindcss.com/)
 - [Shadcn](https://ui.shadcn.com/)
